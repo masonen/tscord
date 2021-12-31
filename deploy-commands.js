@@ -18,6 +18,8 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
+console.log(commands);
+
 rest.put(Routes.applicationCommands(ClientId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
 	.catch(console.error);
