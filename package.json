@@ -1,0 +1,27 @@
+{
+  "name": "tscord",
+  "version": "0.1.0",
+  "description": "Discord bot utilizing the TeamSpeak Server WebQuery API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masonen/tscord.git"
+  },
+  "keywords": [
+    "discordbot"
+  ],
+  "author": "Benjamin Meißner",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/masonen/tscord/issues"
+  },
+  "homepage": "https://github.com/masonen/tscord#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "discord.js": "^13.5.0",
+    "dotenv": "^10.0.0"
+  }
+}
