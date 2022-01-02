@@ -1,32 +1,21 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const interactionMemberIsAdmin = require('../helper/interactionMemberIsAdmin');
 
-const tsConfigSchema = require('../schemas/tsConfigSchema');
+const roleMappingSchema = require('../schemas/roleMappingSchema');
 const mongo = require('../mongo');
-
-const stripTrailingSlash = (str) => {
-	if (!(typeof str === 'string') || !(str instanceof String)) {
-		// was no string
-		return str;
-	}
-
-	return str.endsWith('/') ?
-		str.slice(0, -1) :
-		str;
-};
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('configure-ts')
-		.setDescription('Configure Teamspeak WebQuery API')
-		.addStringOption(option =>
-			option.setName('base-url')
-				.setDescription('Base Url of WebQuery Api')
+		.setName('configure-roles')
+		.setDescription('Configure mapping of Discord role to Teamspeak Role Id')
+		.addRoleOption(option =>
+			option.setName('role')
+				.setDescription('Discord role to Map')
 				.setRequired(true),
 		)
 		.addStringOption(option =>
-			option.setName('api-key')
-				.setDescription('Api Key of WebQuery Api')
+			option.setName('ts-id')
+				.setDescription('Mapped Teamspeak Role Id')
 				.setRequired(true),
 		),
 
@@ -39,25 +28,26 @@ module.exports = {
 			return;
 		}
 
-		const baseUrl = stripTrailingSlash(interaction.options.getString('base-url'));
-		const apiKey = interaction.options.getString('api-key');
+		const role = interaction.options.getRole('role');
+		const tsId = interaction.options.getString('ts-id');
 
 		await mongo().then(async (mongoose) => {
 			try {
-				await tsConfigSchema.findOneAndUpdate(
+				await roleMappingSchema.findOneAndUpdate(
 					{
-						_id: guild.id,
+						_id: role.id,
 					},
 					{
-						_id: guild.id,
-						baseUrl: baseUrl,
-						apiKey: apiKey,
+						_id: role.id,
+						guildId: guild.id,
+						tsRoleId: tsId,
 					},
 					{
 						upsert: true,
 					},
 				);
 
+				console.log(`${interaction.user.tag} added mapping for ${role.id} to ${tsId} for guild ${guild.id}`);
 				await interaction.reply({ content: 'Configuration has been stored!', ephemeral: true });
 			}
 			catch (e) {
