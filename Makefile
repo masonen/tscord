@@ -13,6 +13,11 @@ start: ## starts the bot
 	$(DOCKER_COMPOSE) up --remove-orphans -d bot
 .PHONY: start
 
+start-logs: ## starts the bot and opens bot logs
+	$(DOCKER_COMPOSE) up --remove-orphans -d bot
+	$(DOCKER) logs -f tscord_bot_1
+.PHONY: start-logs
+
 deploy-commands: ## deploys commands should be done after updating the bot
 	$(DOCKER_COMPOSE) run --rm bot npm run deploy-commands
 .PHONY: deploy-commands
